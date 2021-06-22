@@ -7,7 +7,9 @@ import HomeStack from './src/stacks/Home';
 import FavoritesStack from './src/stacks/Favorites';
 import UserStack from './src/stacks/User';
 import home_icon from './src/assets/home.png';
+import home_icon_filled from './src/assets/home_filled.png';
 import heart from './src/assets/heart.png';
+import heart_filled from './src/assets/heart_filled.png';
 import profile from './src/assets/profile_placeholder.jpeg';
 
 const Tabs = createBottomTabNavigator();
@@ -25,10 +27,10 @@ const App = () => {
             name="Home"
             component={HomeStack}
             options={{
-              tabBarIcon: ({ size }) => (
+              tabBarIcon: ({ size, focused }) => (
                 <Image
                   style={{ width: size, height: size }}
-                  source={home_icon}
+                  source={focused ? home_icon_filled : home_icon}
                 />
               ),
             }}
@@ -37,8 +39,11 @@ const App = () => {
             name="Favorites"
             component={FavoritesStack}
             options={{
-              tabBarIcon: ({ size }) => (
-                <Image style={{ width: size, height: size }} source={heart} />
+              tabBarIcon: ({ size, focused }) => (
+                <Image
+                  style={{ width: size, height: size }}
+                  source={focused ? heart_filled : heart}
+                />
               ),
             }}
           />
