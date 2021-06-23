@@ -2,7 +2,7 @@ import React from 'react';
 import { Text } from 'react-native';
 
 import Category from '../Category';
-import { List, Item } from './styles';
+import { FlatList, Item } from './styles';
 
 type Props = {
   categories: ICategory[];
@@ -12,8 +12,8 @@ type Props = {
 const ListOfCategories = ({ categories, loading }: Props) => {
   const keyExtractor = (category: ICategory) => category.id.toString();
   const renderEmpty = () =>
-    !loading && (categories === undefined || categories.length < 1) ? (
-      <Text>There are not categories</Text>
+    !loading && (categories === undefined || categories.length === 0) ? (
+      <Text>There are not suggestions</Text>
     ) : null;
 
   return (
@@ -21,7 +21,7 @@ const ListOfCategories = ({ categories, loading }: Props) => {
       {loading ? (
         <Text>loading...</Text>
       ) : (
-        <List
+        <FlatList
           data={categories}
           horizontal
           keyExtractor={keyExtractor}

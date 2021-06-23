@@ -14,6 +14,7 @@ const HomeStack = () => {
         component={Home}
         options={{
           headerTitle: () => <Header />,
+          headerStyle: { shadowColor: 'transparent' },
         }}
       />
     </Stack.Navigator>
