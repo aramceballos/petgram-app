@@ -1,7 +1,7 @@
 import React from 'react';
 import { Text } from 'react-native';
 
-import PhotoCard from '../PhotoCards';
+import PhotoCard from '../PhotoCard';
 
 type Props = {
   posts: IPost[];
