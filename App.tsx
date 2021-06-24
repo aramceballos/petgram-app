@@ -1,5 +1,7 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { StatusBar, Image } from 'react-native';
+
+import SplashScreen from 'react-native-splash-screen';
 import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 
@@ -15,6 +17,10 @@ import profile from './src/assets/profile_placeholder.jpeg';
 const Tabs = createBottomTabNavigator();
 
 const App = () => {
+  useEffect(() => {
+    SplashScreen.hide();
+  }, []);
+
   return (
     <>
       <StatusBar barStyle="dark-content" />
