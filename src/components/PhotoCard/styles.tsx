@@ -110,13 +110,15 @@ export const LikedBy = styled.View`
   margin-bottom: 8px;
 `;
 
-export const UserLink = styled.Text`
-  font-weight: 600;
-`;
-
 export const Description = styled.View`
   font-size: 14px;
   margin-bottom: 8px;
+  flex-direction: row;
+`;
+
+export const UserLink = styled.Text`
+  font-weight: 600;
+  margin-right: 5px;
 `;
 
 export const PostDateText = styled.Text`
