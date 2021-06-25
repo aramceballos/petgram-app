@@ -1,5 +1,7 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
+import axios from 'axios';
 import styled from 'styled-components/native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import ListOfCategories from '../components/ListOfCategories';
 import ListOfPhotoCards from '../components/ListOfPhotoCards';
@@ -9,75 +11,67 @@ const Container = styled.ScrollView`
 `;
 
 const Home = () => {
-  const categories = [
-    {
-      id: 5,
-      category: 'test_category',
-      image_url: 'https://i.imgur.com/dJa0Hpl.jpg',
-    },
-    {
-      id: 13,
-      category: 'another_test',
-      image_url:
-        'https://res.cloudinary.com/midudev/image/upload/w_150/v1555671700/category_dogs.jpg',
-    },
-  ];
+  const [loadingCategories, setLoadingCategories] = useState(false);
+  const [categories, setCategories] = useState<ICategory[]>();
+  const [loadingPosts, setLoadingPosts] = useState(false);
+  const [posts, setPosts] = useState<IPost[]>();
 
-  const posts = [
-    {
-      id: 5,
-      user_id: 3,
-      category_id: 50,
-      post_date: '2021-05-25 05:38:27.151523',
-      image_url:
-        'https://res.cloudinary.com/midudev/image/upload/w_300/q_80/v1560262103/dogs.png',
-      description: 'testing description',
-      name: 'testing name',
-      username: 'testing.username',
-      email: 'test@test.com',
-      likes: [
-        {
-          id: 2,
-          post_id: 23,
-          user_id: 45,
+  useEffect(() => {
+    AsyncStorage.getItem('token').then((token) => {
+      getCategories(token as string);
+      getPosts(token as string);
+    });
+  }, []);
+
+  const getCategories = async (token: string) => {
+    setLoadingCategories(true);
+    try {
+      const res = await axios('https://api.petgram.club/api/c', {
+        headers: {
+          Authorization: `Bearer ${token}`,
         },
-        {
-          id: 456,
-          post_id: 6854,
-          user_id: 4876,
+      });
+      setCategories(res.data.data);
+      setLoadingCategories(false);
+    } catch (error) {
+      setLoadingCategories(false);
+      if (
+        error.response?.data?.message === 'Missing or malformed JWT' ||
+        error.response?.data?.message === 'Invalid or expired JWT'
+      ) {
+        await AsyncStorage.removeItem('token');
+      }
+    }
+  };
+
+  const getPosts = async (token: string) => {
+    setLoadingPosts(true);
+    try {
+      const res = await axios('https://api.petgram.club/api/p', {
+        headers: {
+          Authorization: `Bearer ${token}`,
         },
-      ],
-    },
-    {
-      id: 4879,
-      user_id: 489,
-      category_id: 489,
-      post_date: '2021-05-25 05:38:27.151523',
-      image_url:
-        'https://res.cloudinary.com/midudev/image/upload/w_300/q_80/v1560262103/dogs.png',
-      description: 'another description',
-      name: 'another name',
-      username: 'another.username',
-      email: 'test@test.com',
-      likes: [
-        {
-          id: 2,
-          post_id: 23,
-          user_id: 45,
-        },
-        {
-          id: 456,
-          post_id: 6854,
-          user_id: 4876,
-        },
-      ],
-    },
-  ];
+      });
+      setPosts(res.data.data);
+      setLoadingPosts(false);
+    } catch (error) {
+      setLoadingPosts(false);
+      if (
+        error.response?.data?.message === 'Missing or malformed JWT' ||
+        error.response?.data?.message === 'Invalid or expired JWT'
+      ) {
+        await AsyncStorage.removeItem('token');
+      }
+    }
+  };
 
   return (
     <Container showsVerticalScrollIndicator={false}>
-      <ListOfCategories loading={false} categories={categories} />
-      <ListOfPhotoCards loading={false} posts={posts} />
+      <ListOfCategories
+        loading={loadingCategories}
+        categories={categories as ICategory[]}
+      />
+      <ListOfPhotoCards loading={loadingPosts} posts={posts as IPost[]} />
     </Container>
   );
 };

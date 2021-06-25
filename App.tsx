@@ -21,11 +21,9 @@ const App = () => {
   const [token, setToken] = useState('');
 
   useEffect(() => {
-    SplashScreen.hide();
-  }, []);
-
-  useEffect(() => {
-    getData();
+    getData().then(() => {
+      SplashScreen.hide();
+    });
   }, []);
 
   const getData = async () => {

@@ -96,7 +96,6 @@ const Login = () => {
           autoCapitalize="none"
           autoCompleteType="off"
           onChangeText={(text: string) => {
-            console.log(text);
             setIdentity(text);
           }}
         />
@@ -105,7 +104,6 @@ const Login = () => {
           placeholderTextColor="#aaa"
           secureTextEntry
           onChangeText={(text: string) => {
-            console.log(text);
             setPassword(text);
           }}
         />
