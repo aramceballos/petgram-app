@@ -108,6 +108,7 @@ export const HeartButton = styled.Image`
 export const LikedBy = styled.View`
   font-size: 14px;
   margin-bottom: 8px;
+  flex-direction: row;
 `;
 
 export const Description = styled.View`
