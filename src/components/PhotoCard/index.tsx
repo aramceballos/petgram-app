@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Dimensions, Text } from 'react-native';
+import { Dimensions, Text, Pressable, Animated } from 'react-native';
 import Image from 'react-native-scalable-image';
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -10,8 +10,10 @@ import {
   Avatar,
   NameText,
   HeartButton,
+  HeartContainer,
+  Heart,
   BottomSection,
-  Pressable,
+  ButtonContainer,
   LikedBy,
   UserLink,
   Description,
@@ -20,6 +22,7 @@ import {
 
 import heart from '../../assets/heart.png';
 import heart_filled_red from '../../assets/heart_filled_red.png';
+import heart_white from '../../assets/heart_white.png';
 import profile from '../../assets/profile_placeholder.jpeg';
 
 const DEFAULT_IMAGE =
@@ -54,8 +57,12 @@ const PhotoCard = ({
   post_date,
 }: IPost) => {
   const [liked, setLiked] = useState(false);
+  const [showHeart, setShowHeart] = useState(false);
   const [userInfo, setUserInfo] = useState<IUser>();
   const [userId, setUserId] = useState<Number>();
+  const [lastClick, setLastClick] = useState(0);
+  const [opacity] = useState(new Animated.Value(0));
+  const [scale] = useState(new Animated.Value(0.2));
 
   useEffect(() => {
     AsyncStorage.getItem('userInfo-id').then((user_id) => {
@@ -80,6 +87,86 @@ const PhotoCard = ({
       setLiked(true);
     }
   }, [userId, likes]);
+
+  useEffect(() => {
+    if (showHeart) {
+      setTimeout(() => {
+        setShowHeart(false);
+      }, 1200);
+    }
+  }, [showHeart]);
+
+  //FadeIn heart animation
+  useEffect(() => {
+    if (showHeart) {
+      Animated.timing(opacity, {
+        toValue: 1,
+        duration: 200,
+        useNativeDriver: true,
+      }).start(({ finished }) => {
+        if (finished) {
+          setTimeout(() => {
+            Animated.timing(opacity, {
+              toValue: 0,
+              duration: 250,
+              useNativeDriver: true,
+            }).start();
+          }, 550);
+        }
+      });
+    }
+  });
+
+  //Bounce heart animation
+  useEffect(() => {
+    if (showHeart) {
+      Animated.timing(scale, {
+        toValue: 1.1,
+        duration: 200,
+        useNativeDriver: true,
+      }).start(({ finished: finished1 }) => {
+        if (finished1) {
+          Animated.timing(scale, {
+            toValue: 1,
+            duration: 100,
+            useNativeDriver: true,
+          }).start(({ finished: finished2 }) => {
+            if (finished2) {
+              Animated.timing(scale, {
+                toValue: 1.05,
+                duration: 100,
+                useNativeDriver: true,
+              }).start(({ finished: finished3 }) => {
+                if (finished3) {
+                  Animated.timing(scale, {
+                    toValue: 1,
+                    duration: 100,
+                    useNativeDriver: true,
+                  }).start(({ finished: finished4 }) => {
+                    if (finished4) {
+                      Animated.timing(scale, {
+                        toValue: 1,
+                        duration: 250,
+                        useNativeDriver: true,
+                      }).start(({ finished: finished5 }) => {
+                        if (finished5) {
+                          Animated.timing(scale, {
+                            toValue: 0,
+                            duration: 100,
+                            useNativeDriver: true,
+                          }).start();
+                        }
+                      });
+                    }
+                  });
+                }
+              });
+            }
+          });
+        }
+      });
+    }
+  });
 
   const getUserById = async (user_id: number, token: string) => {
     try {
@@ -124,24 +211,55 @@ const PhotoCard = ({
     } catch (error) {}
   };
 
+  const likePost = async () => {
+    try {
+      const token = await AsyncStorage.getItem('token');
+      if (!liked) {
+        setLiked(true);
+        await fetch(`https://api.petgram.club/api/p/l?post_id=${id}`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`,
+          },
+        }).then((res) => res.json());
+      }
+    } catch (error) {}
+  };
+
   return (
     <Article>
       <Header>
         <Avatar source={profile} />
         <NameText>{username}</NameText>
       </Header>
-      <Image
-        width={Dimensions.get('window').width}
-        source={{ uri: image_url }}
-      />
+      <Pressable
+        onPress={() => {
+          setLastClick(Date.now());
+          if (Date.now() - lastClick < 400) {
+            setShowHeart(true);
+            likePost();
+          }
+        }}>
+        <Image
+          width={Dimensions.get('window').width}
+          source={{ uri: image_url }}
+        />
+        <HeartContainer>
+          <Heart
+            source={heart_white}
+            style={{ opacity, transform: [{ scale }] }}
+          />
+        </HeartContainer>
+      </Pressable>
       <BottomSection>
-        <Pressable onPress={handlePress}>
+        <ButtonContainer onPress={handlePress}>
           {liked ? (
             <HeartButton source={heart_filled_red} />
           ) : (
             <HeartButton source={heart} />
           )}
-        </Pressable>
+        </ButtonContainer>
         {userInfo && (
           <LikedBy>
             <Text>Liked by </Text>

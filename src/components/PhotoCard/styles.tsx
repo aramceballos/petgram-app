@@ -1,3 +1,4 @@
+import { Animated } from 'react-native';
 import styled from 'styled-components/native';
 
 // const fadeInKeyframes = keyframes`
@@ -91,18 +92,35 @@ export const NameText = styled.Text`
   font-weight: 500;
 `;
 
+export const HeartButton = styled.Image`
+  width: 24px;
+  height: 24px;
+`;
+
+export const HeartContainer = styled.View`
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`;
+
+export const Heart = styled(Animated.Image)`
+  opacity: 0;
+  width: 100px;
+  height: 100px;
+`;
+
 export const BottomSection = styled.View`
   padding: 0 16px;
 `;
 
-export const Pressable = styled.Pressable`
+export const ButtonContainer = styled.Pressable`
   display: flex;
   padding: 8px 0;
-`;
-
-export const HeartButton = styled.Image`
-  width: 24px;
-  height: 24px;
 `;
 
 export const LikedBy = styled.View`

@@ -1,6 +1,6 @@
 {
-  "name": "Petgram",
-  "version": "0.0.1",
+  "name": "petgram",
+  "version": "0.1.1",
   "private": true,
   "scripts": {
     "android": "react-native run-android",
