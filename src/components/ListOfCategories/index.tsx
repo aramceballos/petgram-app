@@ -24,7 +24,8 @@ const ListOfCategories = ({ categories, loading }: Props) => {
         <FlatList
           data={categories}
           horizontal
-          showHorizontalIndicator={false}
+          showsVerticalScrollIndicator={false}
+          showsHorizontalScrollIndicator={false}
           keyExtractor={keyExtractor}
           ListEmptyComponent={renderEmpty}
           renderItem={({ item }: { item: ICategory }) => (
