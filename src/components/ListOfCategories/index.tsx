@@ -1,5 +1,6 @@
 import React from 'react';
 import { Text } from 'react-native';
+import SkeletonPlaceholder from 'react-native-skeleton-placeholder';
 
 import Category from '../Category';
 import { FlatList, Item } from './styles';
@@ -19,7 +20,38 @@ const ListOfCategories = ({ categories, loading }: Props) => {
   return (
     <>
       {loading ? (
-        <Text>loading...</Text>
+        <SkeletonPlaceholder speed={1200}>
+          <SkeletonPlaceholder.Item
+            flexDirection="row"
+            alignItems="center"
+            paddingTop={16}
+            paddingBottom={16}
+            paddingLeft={10}>
+            <SkeletonPlaceholder.Item
+              width={72}
+              height={72}
+              borderRadius={50}
+            />
+            <SkeletonPlaceholder.Item
+              width={72}
+              height={72}
+              borderRadius={50}
+              marginLeft={20}
+            />
+            <SkeletonPlaceholder.Item
+              width={72}
+              height={72}
+              borderRadius={50}
+              marginLeft={20}
+            />
+            <SkeletonPlaceholder.Item
+              width={72}
+              height={72}
+              borderRadius={50}
+              marginLeft={20}
+            />
+          </SkeletonPlaceholder.Item>
+        </SkeletonPlaceholder>
       ) : (
         <FlatList
           data={categories}
