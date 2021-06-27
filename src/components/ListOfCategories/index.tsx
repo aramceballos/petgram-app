@@ -13,7 +13,7 @@ const ListOfCategories = ({ categories, loading }: Props) => {
   const keyExtractor = (category: ICategory) => category.id.toString();
   const renderEmpty = () =>
     !loading && (categories === undefined || categories.length === 0) ? (
-      <Text>There are not suggestions</Text>
+      <Text>There are not categories</Text>
     ) : null;
 
   return (
