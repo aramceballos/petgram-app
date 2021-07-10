@@ -5,7 +5,7 @@ type TContainer = {
   sonClick: () => void;
 };
 
-export const Container = styled.View<TContainer>`
+export const Container = styled.Pressable<TContainer>`
   border-radius: 36px;
   /* background: linear-gradient(45deg, orange, #962b96); */
   padding: 2px;
