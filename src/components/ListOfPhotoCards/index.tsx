@@ -6,9 +6,14 @@ import PhotoCard from '../PhotoCard';
 type Props = {
   posts: IPost[];
   loading: boolean;
+  /**
+   * Executed when the name of the user is pressed
+   * @param {string} username of the user to be searched
+   */
+  onPressName: (username: string) => void;
 };
 
-const ListOfPhotoCards = ({ posts, loading }: Props) => {
+const ListOfPhotoCards = ({ posts, loading, onPressName }: Props) => {
   return (
     <>
       {loading ? (
@@ -61,7 +66,10 @@ const ListOfPhotoCards = ({ posts, loading }: Props) => {
           </SkeletonPlaceholder>
         </>
       ) : (
-        posts && posts.map((post) => <PhotoCard key={post.id} {...post} />)
+        posts &&
+        posts.map((post) => (
+          <PhotoCard key={post.id} {...post} onPressName={onPressName} />
+        ))
       )}
     </>
   );

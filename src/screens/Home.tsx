@@ -10,7 +10,7 @@ const Container = styled.ScrollView`
   background-color: #fff;
 `;
 
-const Home = () => {
+const Home = ({ navigation }) => {
   const [loadingCategories, setLoadingCategories] = useState(false);
   const [categories, setCategories] = useState<ICategory[]>();
   const [loadingPosts, setLoadingPosts] = useState(false);
@@ -65,13 +65,21 @@ const Home = () => {
     }
   };
 
+  const handlePressName = (username: string) => {
+    navigation.navigate('User', { username });
+  };
+
   return (
     <Container showsVerticalScrollIndicator={false}>
       <ListOfCategories
         loading={loadingCategories}
         categories={categories as ICategory[]}
       />
-      <ListOfPhotoCards loading={loadingPosts} posts={posts as IPost[]} />
+      <ListOfPhotoCards
+        loading={loadingPosts}
+        posts={posts as IPost[]}
+        onPressName={handlePressName}
+      />
     </Container>
   );
 };

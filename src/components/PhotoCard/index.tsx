@@ -48,6 +48,14 @@ const parseDate = (date: string): string => {
   return `${months[parseInt(month, 10) - 1]} ${day}, ${year}`;
 };
 
+type Props = {
+  /**
+   * Executed when the name of the user is pressed
+   * @param {string} username of the user to be searched
+   */
+  onPressName: (username: string) => void;
+};
+
 const PhotoCard = ({
   id,
   image_url = DEFAULT_IMAGE,
@@ -55,7 +63,8 @@ const PhotoCard = ({
   likes,
   description,
   post_date,
-}: IPost) => {
+  onPressName,
+}: IPost & Props) => {
   const [liked, setLiked] = useState(false);
   const [showHeart, setShowHeart] = useState(false);
   const [userInfo, setUserInfo] = useState<IUser>();
@@ -227,9 +236,13 @@ const PhotoCard = ({
     } catch (error) {}
   };
 
+  const handlePressName = () => {
+    onPressName(username);
+  };
+
   return (
     <Article>
-      <Header>
+      <Header onPress={handlePressName}>
         <Avatar source={profile} />
         <NameText>{username}</NameText>
       </Header>

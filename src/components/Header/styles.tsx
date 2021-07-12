@@ -7,4 +7,5 @@ export const TouchableOpacity = styled.TouchableOpacity`
 export const Image = styled.Image`
   height: 120px;
   resize-mode: contain;
+  width: 200px;
 `;
