@@ -64,15 +64,15 @@ const UserDetail = ({ route }) => {
   useEffect(() => {
     if (username) {
       AsyncStorage.getItem('token').then((token) => {
-        getUserById(token as string).then(() => {
-          getPosts(token as string);
+        getUserByUsername(token as string).then((user) => {
+          getPosts(user.id, token as string);
         });
       });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [username]);
 
-  const getUserById = async (token: string) => {
+  const getUserByUsername = async (token: string): Promise<IUser> => {
     try {
       const res = await axios(
         `https://api.petgram.club/api/u?username=${username}`,
@@ -83,6 +83,7 @@ const UserDetail = ({ route }) => {
         },
       );
       setUserInfo(res.data.data);
+      return res.data.data;
     } catch (error) {
       if (
         error.response?.data?.message === 'Missing or malformed JWT' ||
@@ -91,19 +92,26 @@ const UserDetail = ({ route }) => {
         await AsyncStorage.removeItem('token');
       }
       console.error(error.response?.data?.message);
+      return {
+        id: 0,
+        email: '',
+        name: '',
+        username: '',
+      };
     }
   };
 
-  const getPosts = async (token: string) => {
+  const getPosts = async (userId: number, token: string) => {
     try {
       const res = await axios(
-        `https://api.petgram.club/api/p?user_id=${userInfo?.id}`,
+        `https://api.petgram.club/api/p?user_id=${userId}`,
         {
           headers: {
             Authorization: `Bearer ${token}`,
           },
         },
       );
+      console.log(res.data.data);
       setUserPosts(res.data.data);
     } catch (error) {
       if (
