@@ -9,7 +9,11 @@ const Stack = createStackNavigator();
 
 const HomeStack = () => {
   return (
-    <Stack.Navigator>
+    <Stack.Navigator
+      screenOptions={{
+        headerBackTitleVisible: false,
+        gestureResponseDistance: { horizontal: 500 },
+      }}>
       <Stack.Screen
         name="Home"
         component={Home}
