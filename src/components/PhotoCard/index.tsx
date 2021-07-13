@@ -53,7 +53,7 @@ type Props = {
    * Executed when the name of the user is pressed
    * @param {string} username of the user to be searched
    */
-  onPressName: (username: string) => void;
+  onPressName?: (username: string) => void;
 };
 
 const PhotoCard = ({
@@ -237,7 +237,7 @@ const PhotoCard = ({
   };
 
   const handlePressName = () => {
-    onPressName(username);
+    onPressName && onPressName(username);
   };
 
   return (

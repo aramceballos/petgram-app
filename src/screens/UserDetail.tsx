@@ -55,7 +55,7 @@ const PostImage = styled.Image`
   width: ${Dimensions.get('window').width / 3}px;
 `;
 
-const UserDetail = ({ route }) => {
+const UserDetail = ({ route, navigation }) => {
   const [userInfo, setUserInfo] = useState<IUser>();
   const [userPosts, setUserPosts] = useState<IPost[]>();
 
@@ -111,7 +111,6 @@ const UserDetail = ({ route }) => {
           },
         },
       );
-      console.log(res.data.data);
       setUserPosts(res.data.data);
     } catch (error) {
       if (
@@ -122,6 +121,10 @@ const UserDetail = ({ route }) => {
       }
       console.error(error.response?.data?.message);
     }
+  };
+
+  const handlePress = (postId: number) => {
+    navigation.navigate('Post', { postId });
   };
 
   return (
@@ -140,7 +143,9 @@ const UserDetail = ({ route }) => {
           {userPosts &&
             userPosts.length > 0 &&
             userPosts.map((post) => (
-              <PostImageWrapper key={post.id}>
+              <PostImageWrapper
+                key={post.id}
+                onPress={() => handlePress(post.id)}>
                 <PostImage source={{ uri: post.image_url }} />
               </PostImageWrapper>
             ))}

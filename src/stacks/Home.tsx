@@ -3,6 +3,7 @@ import { createStackNavigator } from '@react-navigation/stack';
 
 import Home from '../screens/Home';
 import User from '../screens/UserDetail';
+import Post from '../screens/Post';
 import Header from '../components/Header';
 
 const Stack = createStackNavigator();
@@ -25,6 +26,14 @@ const HomeStack = () => {
       <Stack.Screen
         name="User"
         component={User}
+        options={{
+          headerTitle: () => <Header />,
+          headerStyle: { shadowColor: 'transparent' },
+        }}
+      />
+      <Stack.Screen
+        name="Post"
+        component={Post}
         options={{
           headerTitle: () => <Header />,
           headerStyle: { shadowColor: 'transparent' },
