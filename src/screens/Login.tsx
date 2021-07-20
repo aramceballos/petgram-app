@@ -51,7 +51,15 @@ const StyledLink = styled.Text`
   font-weight: 600;
 `;
 
-const Login = () => {
+type Props = {
+  /**
+   * Executed when receives a token after login
+   * @param {string} token of the user
+   */
+  onUpdateToken: (token: string) => void;
+};
+
+const Login = ({ onUpdateToken }: Props) => {
   const [loading, setLoading] = useState(false);
   const [identity, setIdentity] = useState('');
   const [password, setPassword] = useState('');
@@ -76,6 +84,7 @@ const Login = () => {
           'userInfo-username',
           response.data.data.username,
         );
+        onUpdateToken(response.data.data.token);
       }
       setLoading(false);
     } catch (error) {

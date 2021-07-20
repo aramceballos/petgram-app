@@ -33,6 +33,10 @@ const App = () => {
     }
   };
 
+  const handleUpdateToken = (t: string) => {
+    setToken(t);
+  };
+
   return (
     <>
       <StatusBar barStyle="dark-content" />
@@ -80,7 +84,7 @@ const App = () => {
             />
           </Tabs.Navigator>
         ) : (
-          <Login />
+          <Login onUpdateToken={handleUpdateToken} />
         )}
       </NavigationContainer>
     </>
