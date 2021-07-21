@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react';
 import { Dimensions, Text, Pressable, Animated } from 'react-native';
 import Image from 'react-native-scalable-image';
 import axios from 'axios';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import { connect } from 'react-redux';
 
 import {
