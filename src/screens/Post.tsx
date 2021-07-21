@@ -2,9 +2,10 @@ import React, { useState, useEffect } from 'react';
 import { Dimensions } from 'react-native';
 import styled from 'styled-components/native';
 import axios from 'axios';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import SkeletonPlaceholder from 'react-native-skeleton-placeholder';
+import { connect } from 'react-redux';
 
+import { setToken as setTokenAction } from '../actions';
 import PhotoCard from '../components/PhotoCard';
 
 const Container = styled.View`
@@ -12,20 +13,18 @@ const Container = styled.View`
   height: ${Dimensions.get('window').height}px;
 `;
 
-const Post = ({ route }) => {
+const Post = ({ route, token, setToken }) => {
   const [post, setPost] = useState<IPost>();
   const [loading, setLoading] = useState(true);
 
   const { postId } = route.params;
 
   useEffect(() => {
-    AsyncStorage.getItem('token').then((token) => {
-      getPost(token as string);
-    });
+    getPost();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const getPost = async (token: string) => {
+  const getPost = async () => {
     setLoading(true);
     try {
       const res = await axios(
@@ -44,7 +43,7 @@ const Post = ({ route }) => {
         error.response?.data?.message === 'Missing or malformed JWT' ||
         error.response?.data?.message === 'Invalid or expired JWT'
       ) {
-        await AsyncStorage.removeItem('token');
+        setToken('');
       }
     }
   };
@@ -84,4 +83,12 @@ const Post = ({ route }) => {
   );
 };
 
-export default Post;
+const mapStateToProps = (state) => ({
+  token: state.token,
+});
+
+const mapDispatchToProps = {
+  setToken: setTokenAction,
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(Post);

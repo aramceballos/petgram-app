@@ -2,14 +2,25 @@
 import React, { useState } from 'react';
 import { StatusBar } from 'react-native';
 import axios from 'axios';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import { connect } from 'react-redux';
 
 import Story from '../Story';
 import { Container, Image } from './styles';
+import { setToken as setTokenAction } from '../../actions';
 
 const DEFAULT_IMAGE = 'https://i.imgur.com/dJa0Hpl.jpg';
 
-const Category = ({ image_url = DEFAULT_IMAGE, id }: ICategory) => {
+type Props = {
+  token: string;
+  setToken: (token: string) => void;
+};
+
+const Category = ({
+  image_url = DEFAULT_IMAGE,
+  id,
+  token,
+  setToken,
+}: Props & ICategory) => {
   const [modalOpen, setModalOpen] = useState(false);
   const [loading, setLoading] = useState(false);
   const [currentStoryIndex, setCurrentStoryIndex] = useState(0);
@@ -20,7 +31,6 @@ const Category = ({ image_url = DEFAULT_IMAGE, id }: ICategory) => {
     StatusBar.setBarStyle('light-content');
 
     try {
-      const token = await AsyncStorage.getItem('token');
       setLoading(true);
       const res = await axios('https://api.petgram.club/api/p', {
         headers: {
@@ -37,7 +47,7 @@ const Category = ({ image_url = DEFAULT_IMAGE, id }: ICategory) => {
         error.response?.data?.message === 'Missing or malformed JWT' ||
         error.response?.data?.message === 'Invalid or expired JWT'
       ) {
-        await AsyncStorage.removeItem('token');
+        setToken('');
       }
     }
     setLoading(false);
@@ -83,4 +93,12 @@ const Category = ({ image_url = DEFAULT_IMAGE, id }: ICategory) => {
   );
 };
 
-export default Category;
+const mapStateToProps = (state) => ({
+  token: state.token,
+});
+
+const mapDispatchToProps = {
+  setToken: setTokenAction,
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(Category);

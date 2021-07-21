@@ -3,8 +3,9 @@ import { Dimensions, ScrollView } from 'react-native';
 import { View } from 'react-native';
 import styled from 'styled-components/native';
 import axios from 'axios';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import { connect } from 'react-redux';
 
+import { setToken as setTokenAction } from '../actions';
 import profile_icon from '../assets/profile_placeholder.jpeg';
 
 const Container = styled.View`
@@ -22,8 +23,8 @@ const ImageContainer = styled.View`
 `;
 
 const ProfileImage = styled.Image`
-  width: 77;
-  height: 77;
+  width: 77px;
+  height: 77px;
 `;
 
 const Username = styled.Text`
@@ -55,7 +56,7 @@ const PostImage = styled.Image`
   width: ${Dimensions.get('window').width / 3}px;
 `;
 
-const UserDetail = ({ route, navigation }) => {
+const UserDetail = ({ route, navigation, token, setToken }) => {
   const [userInfo, setUserInfo] = useState<IUser>();
   const [userPosts, setUserPosts] = useState<IPost[]>();
 
@@ -63,16 +64,14 @@ const UserDetail = ({ route, navigation }) => {
 
   useEffect(() => {
     if (username) {
-      AsyncStorage.getItem('token').then((token) => {
-        getUserByUsername(token as string).then((user) => {
-          getPosts(user.id, token as string);
-        });
+      getUserByUsername().then((user) => {
+        getPosts(user.id);
       });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [username]);
 
-  const getUserByUsername = async (token: string): Promise<IUser> => {
+  const getUserByUsername = async (): Promise<IUser> => {
     try {
       const res = await axios(
         `https://api.petgram.club/api/u?username=${username}`,
@@ -89,7 +88,7 @@ const UserDetail = ({ route, navigation }) => {
         error.response?.data?.message === 'Missing or malformed JWT' ||
         error.response?.data?.message === 'Invalid or expired JWT'
       ) {
-        await AsyncStorage.removeItem('token');
+        setToken('');
       }
       console.error(error.response?.data?.message);
       return {
@@ -101,7 +100,7 @@ const UserDetail = ({ route, navigation }) => {
     }
   };
 
-  const getPosts = async (userId: number, token: string) => {
+  const getPosts = async (userId: number) => {
     try {
       const res = await axios(
         `https://api.petgram.club/api/p?user_id=${userId}`,
@@ -117,7 +116,7 @@ const UserDetail = ({ route, navigation }) => {
         error.response?.data?.message === 'Missing or malformed JWT' ||
         error.response?.data?.message === 'Invalid or expired JWT'
       ) {
-        await AsyncStorage.removeItem('token');
+        setToken('');
       }
       console.error(error.response?.data?.message);
     }
@@ -155,4 +154,12 @@ const UserDetail = ({ route, navigation }) => {
   );
 };
 
-export default UserDetail;
+const mapStateToProps = (state) => ({
+  token: state.token,
+});
+
+const mapDispatchToProps = {
+  setToken: setTokenAction,
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(UserDetail);

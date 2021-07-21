@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import styled from 'styled-components/native';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import { connect } from 'react-redux';
 
+import { setToken as setTokenAction } from '../actions';
 import ListOfCategories from '../components/ListOfCategories';
 import ListOfPhotoCards from '../components/ListOfPhotoCards';
 
@@ -10,20 +11,19 @@ const Container = styled.ScrollView`
   background-color: #fff;
 `;
 
-const Home = ({ navigation }) => {
+const Home = ({ navigation, token, setToken }) => {
   const [loadingCategories, setLoadingCategories] = useState(false);
   const [categories, setCategories] = useState<ICategory[]>();
   const [loadingPosts, setLoadingPosts] = useState(false);
   const [posts, setPosts] = useState<IPost[]>();
 
   useEffect(() => {
-    AsyncStorage.getItem('token').then((token) => {
-      getCategories(token as string);
-      getPosts(token as string);
-    });
+    getCategories();
+    getPosts();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const getCategories = async (token: string) => {
+  const getCategories = async () => {
     setLoadingCategories(true);
     try {
       const res = await axios('https://api.petgram.club/api/c', {
@@ -39,12 +39,12 @@ const Home = ({ navigation }) => {
         error.response?.data?.message === 'Missing or malformed JWT' ||
         error.response?.data?.message === 'Invalid or expired JWT'
       ) {
-        await AsyncStorage.removeItem('token');
+        setToken('');
       }
     }
   };
 
-  const getPosts = async (token: string) => {
+  const getPosts = async () => {
     setLoadingPosts(true);
     try {
       const res = await axios('https://api.petgram.club/api/p', {
@@ -60,7 +60,7 @@ const Home = ({ navigation }) => {
         error.response?.data?.message === 'Missing or malformed JWT' ||
         error.response?.data?.message === 'Invalid or expired JWT'
       ) {
-        await AsyncStorage.removeItem('token');
+        setToken('');
       }
     }
   };
@@ -84,4 +84,12 @@ const Home = ({ navigation }) => {
   );
 };
 
-export default Home;
+const mapStateToProps = (state) => ({
+  token: state.token,
+});
+
+const mapDispatchToProps = {
+  setToken: setTokenAction,
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(Home);

@@ -1,8 +1,14 @@
 import React, { useState } from 'react';
 import { ActivityIndicator } from 'react-native';
 import styled from 'styled-components/native';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+// import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
+import { connect } from 'react-redux';
+
+import {
+  setToken as setTokenAction,
+  setUserInfo as setUserInfoAction,
+} from '../actions';
 
 const Container = styled.SafeAreaView`
   background-color: #fff;
@@ -51,15 +57,7 @@ const StyledLink = styled.Text`
   font-weight: 600;
 `;
 
-type Props = {
-  /**
-   * Executed when receives a token after login
-   * @param {string} token of the user
-   */
-  onUpdateToken: (token: string) => void;
-};
-
-const Login = ({ onUpdateToken }: Props) => {
+const Login = ({ setToken, setUserInfo }) => {
   const [loading, setLoading] = useState(false);
   const [identity, setIdentity] = useState('');
   const [password, setPassword] = useState('');
@@ -77,14 +75,12 @@ const Login = ({ onUpdateToken }: Props) => {
       });
 
       if (response.data.status === 'success') {
-        await AsyncStorage.setItem('token', response.data.data.token);
-        await AsyncStorage.setItem('userInfo-id', response.data.data.id + '');
-        await AsyncStorage.setItem('userInfo-name', response.data.data.name);
-        await AsyncStorage.setItem(
-          'userInfo-username',
-          response.data.data.username,
-        );
-        onUpdateToken(response.data.data.token);
+        setUserInfo({
+          id: response.data.data.id,
+          name: response.data.data.name,
+          username: response.data.data.username,
+        });
+        setToken(response.data.data.token);
       }
       setLoading(false);
     } catch (error) {
@@ -127,4 +123,9 @@ const Login = ({ onUpdateToken }: Props) => {
   );
 };
 
-export default Login;
+const mapDispatchToProps = {
+  setToken: setTokenAction,
+  setUserInfo: setUserInfoAction,
+};
+
+export default connect(null, mapDispatchToProps)(Login);

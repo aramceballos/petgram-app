@@ -3,6 +3,7 @@ import { Dimensions, Text, Pressable, Animated } from 'react-native';
 import Image from 'react-native-scalable-image';
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { connect } from 'react-redux';
 
 import {
   Article,
@@ -20,6 +21,7 @@ import {
   PostDateText,
 } from './styles';
 
+import { setToken as setTokenAction } from '../../actions';
 import heart from '../../assets/heart.png';
 import heart_filled_red from '../../assets/heart_filled_red.png';
 import heart_white from '../../assets/heart_white.png';
@@ -54,6 +56,9 @@ type Props = {
    * @param {string} username of the user to be searched
    */
   onPressName?: (username: string) => void;
+  token: string;
+  setToken: (token: string) => void;
+  userInfo: any;
 };
 
 const PhotoCard = ({
@@ -64,38 +69,36 @@ const PhotoCard = ({
   description,
   post_date,
   onPressName,
+  token,
+  setToken,
+  userInfo,
 }: IPost & Props) => {
   const [liked, setLiked] = useState(false);
   const [showHeart, setShowHeart] = useState(false);
-  const [userInfo, setUserInfo] = useState<IUser>();
-  const [userId, setUserId] = useState<Number>();
+  const [randomUserInfo, setRandomUserInfo] = useState<IUser>();
   const [lastClick, setLastClick] = useState(0);
   const [opacity] = useState(new Animated.Value(0));
   const [scale] = useState(new Animated.Value(0.2));
-
-  useEffect(() => {
-    AsyncStorage.getItem('userInfo-id').then((user_id) => {
-      setUserId(parseInt(user_id as string, 10));
-    });
-  }, []);
 
   useEffect(() => {
     if (likes) {
       const like =
         likes[Math.floor(Math.random() * (likes.length - 1 - 0 + 1)) + 0];
 
-      AsyncStorage.getItem('token').then((token) => {
-        getUserById(like.user_id, token as string);
-      });
+      getUserById(like.user_id);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [likes]);
 
   useEffect(() => {
-    const like = likes && likes.some((l: ILike) => l.user_id === userId);
+    const like =
+      likes &&
+      likes.some((l: ILike) => l.user_id === parseInt(userInfo.id, 10));
     if (like) {
       setLiked(true);
     }
-  }, [userId, likes]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [likes]);
 
   useEffect(() => {
     if (showHeart) {
@@ -177,27 +180,26 @@ const PhotoCard = ({
     }
   });
 
-  const getUserById = async (user_id: number, token: string) => {
+  const getUserById = async (user_id: number) => {
     try {
       const res = await axios(`https://api.petgram.club/api/u?id=${user_id}`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
       });
-      setUserInfo(res.data.data);
+      setRandomUserInfo(res.data.data);
     } catch (error) {
       if (
         error.response?.data?.message === 'Missing or malformed JWT' ||
         error.response?.data?.message === 'Invalid or expired JWT'
       ) {
-        await AsyncStorage.removeItem('token');
+        setToken('');
       }
     }
   };
 
   const handlePress = async () => {
     try {
-      const token = await AsyncStorage.getItem('token');
       setLiked(!liked);
 
       if (!liked) {
@@ -222,7 +224,6 @@ const PhotoCard = ({
 
   const likePost = async () => {
     try {
-      const token = await AsyncStorage.getItem('token');
       if (!liked) {
         setLiked(true);
         await fetch(`https://api.petgram.club/api/p/l?post_id=${id}`, {
@@ -273,10 +274,10 @@ const PhotoCard = ({
             <HeartButton source={heart} />
           )}
         </ButtonContainer>
-        {userInfo && (
+        {randomUserInfo && (
           <LikedBy>
             <Text>Liked by </Text>
-            <UserLink>{userInfo?.username}</UserLink>
+            <UserLink>{randomUserInfo?.username}</UserLink>
             {likes && likes.length > 1 && <Text>and others</Text>}
           </LikedBy>
         )}
@@ -291,4 +292,13 @@ const PhotoCard = ({
   );
 };
 
-export default PhotoCard;
+const mapStateToProps = (state) => ({
+  token: state.token,
+  userInfo: state.userInfo,
+});
+
+const mapDispatchToProps = {
+  setToken: setTokenAction,
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(PhotoCard);
