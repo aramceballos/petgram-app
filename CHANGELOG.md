@@ -1,5 +1,10 @@
 # Change Log
 
+## 0.6.0 (July 21, 2021)
+
+- Remove back title from the Favorites header
+- Add Favorites screen
+
 ## 0.5.0 (July 21, 2021)
 
 - Remove back title from user stack header
