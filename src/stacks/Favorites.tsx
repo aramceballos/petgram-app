@@ -9,7 +9,11 @@ const Stack = createStackNavigator();
 
 const FavoritesStack = () => {
   return (
-    <Stack.Navigator>
+    <Stack.Navigator
+      screenOptions={{
+        headerBackTitleVisible: false,
+        gestureResponseDistance: { horizontal: 500 },
+      }}>
       <Stack.Screen
         name="Favorites"
         component={Favorites}
