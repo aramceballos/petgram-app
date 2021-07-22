@@ -13,7 +13,7 @@ const Container = styled.View`
   height: ${Dimensions.get('window').height}px;
 `;
 
-const Post = ({ route, token, setToken }) => {
+const Post = ({ navigation, route, token, setToken }) => {
   const [post, setPost] = useState<IPost>();
   const [loading, setLoading] = useState(true);
 
@@ -48,6 +48,10 @@ const Post = ({ route, token, setToken }) => {
     }
   };
 
+  const handlePressName = (username: string) => {
+    navigation.navigate('User', { username });
+  };
+
   return (
     <Container>
       {loading ? (
@@ -77,7 +81,7 @@ const Post = ({ route, token, setToken }) => {
           </SkeletonPlaceholder>
         </>
       ) : (
-        <PhotoCard {...(post as IPost)} />
+        <PhotoCard {...(post as IPost)} onPressName={handlePressName} />
       )}
     </Container>
   );
