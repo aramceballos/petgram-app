@@ -294,8 +294,7 @@ const PhotoCard = ({
         )}
 
         <Description>
-          <UserLink>{username}</UserLink>
-          <Text>{description}</Text>
+          <UserLink>{username}</UserLink> {description}
         </Description>
         <PostDateText>{parseDate(post_date)}</PostDateText>
       </BottomSection>

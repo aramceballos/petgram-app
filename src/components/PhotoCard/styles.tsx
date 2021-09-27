@@ -61,7 +61,7 @@ export const LikedBy = styled.View`
   flex-direction: row;
 `;
 
-export const Description = styled.View`
+export const Description = styled.Text`
   font-size: 14px;
   margin-bottom: 8px;
   flex-direction: row;
