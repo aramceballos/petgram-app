@@ -53,6 +53,9 @@ export const BottomSection = styled.View`
 export const ButtonContainer = styled.Pressable`
   display: flex;
   padding: 8px 0;
+  width: 35px;
+  align-items: center;
+  margin-left: -7px;
 `;
 
 export const LikedBy = styled.View`
