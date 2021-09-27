@@ -74,7 +74,7 @@ const UserDetail = ({ route, navigation, token, setToken }) => {
   const getUserByUsername = async (): Promise<IUser> => {
     try {
       const res = await axios(
-        `https://api.petgram.club/api/u?username=${username}`,
+        `https://petgram-api-aram.herokuapp.com/api/user?username=${username}`,
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -103,7 +103,7 @@ const UserDetail = ({ route, navigation, token, setToken }) => {
   const getPosts = async (userId: number) => {
     try {
       const res = await axios(
-        `https://api.petgram.club/api/p?user_id=${userId}`,
+        `https://petgram-api-aram.herokuapp.com/api/posts?user_id=${userId}`,
         {
           headers: {
             Authorization: `Bearer ${token}`,

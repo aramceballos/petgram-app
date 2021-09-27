@@ -181,11 +181,14 @@ const PhotoCard = ({
 
   const getUserById = async (user_id: number) => {
     try {
-      const res = await axios(`https://api.petgram.club/api/u?id=${user_id}`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
+      const res = await axios(
+        `https://petgram-api-aram.herokuapp.com/api/user?id=${user_id}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
         },
-      });
+      );
       setRandomUserInfo(res.data.data);
     } catch (error) {
       if (
@@ -202,21 +205,27 @@ const PhotoCard = ({
       setLiked(!liked);
 
       if (!liked) {
-        await fetch(`https://api.petgram.club/api/p/l?post_id=${id}`, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${token}`,
+        await fetch(
+          `https://petgram-api-aram.herokuapp.com/api/like?post_id=${id}`,
+          {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              Authorization: `Bearer ${token}`,
+            },
           },
-        });
+        );
       } else {
-        await fetch(`https://api.petgram.club/api/p/ul?post_id=${id}`, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${token}`,
+        await fetch(
+          `https://petgram-api-aram.herokuapp.com/api/unlike?post_id=${id}`,
+          {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              Authorization: `Bearer ${token}`,
+            },
           },
-        });
+        );
       }
     } catch (error) {}
   };
@@ -225,13 +234,16 @@ const PhotoCard = ({
     try {
       if (!liked) {
         setLiked(true);
-        await fetch(`https://api.petgram.club/api/p/l?post_id=${id}`, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${token}`,
+        await fetch(
+          `https://petgram-api-aram.herokuapp.com/api/like?post_id=${id}`,
+          {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              Authorization: `Bearer ${token}`,
+            },
           },
-        }).then((res) => res.json());
+        ).then((res) => res.json());
       }
     } catch (error) {}
   };

@@ -32,11 +32,14 @@ const Category = ({
 
     try {
       setLoading(true);
-      const res = await axios('https://api.petgram.club/api/p', {
-        headers: {
-          Authorization: `Bearer ${token}`,
+      const res = await axios(
+        'https://petgram-api-aram.herokuapp.com/api/posts',
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
         },
-      });
+      );
       const filteredResults = res.data.data.filter(
         (item: IPost) => item.category_id === id,
       );

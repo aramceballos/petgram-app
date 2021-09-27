@@ -32,11 +32,14 @@ const Favorites = ({ navigation, token, setToken }) => {
 
   const getPosts = async () => {
     try {
-      const res = await axios('https://api.petgram.club/api/p/f', {
-        headers: {
-          Authorization: `Bearer ${token}`,
+      const res = await axios(
+        'https://petgram-api-aram.herokuapp.com/api/posts/favorites',
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
         },
-      });
+      );
       setPosts(res.data.data);
     } catch (error) {
       if (

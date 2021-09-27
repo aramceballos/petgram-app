@@ -26,11 +26,14 @@ const Home = ({ navigation, token, setToken }) => {
   const getCategories = async () => {
     setLoadingCategories(true);
     try {
-      const res = await axios('https://api.petgram.club/api/c', {
-        headers: {
-          Authorization: `Bearer ${token}`,
+      const res = await axios(
+        'https://petgram-api-aram.herokuapp.com/api/categories',
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
         },
-      });
+      );
       setCategories(res.data.data);
       setLoadingCategories(false);
     } catch (error) {
@@ -47,11 +50,14 @@ const Home = ({ navigation, token, setToken }) => {
   const getPosts = async () => {
     setLoadingPosts(true);
     try {
-      const res = await axios('https://api.petgram.club/api/p', {
-        headers: {
-          Authorization: `Bearer ${token}`,
+      const res = await axios(
+        'https://petgram-api-aram.herokuapp.com/api/posts',
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
         },
-      });
+      );
       setPosts(res.data.data);
       setLoadingPosts(false);
     } catch (error) {

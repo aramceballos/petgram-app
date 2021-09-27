@@ -83,7 +83,7 @@ const Login = ({ setToken, setUserInfo }) => {
     try {
       const response = await axios({
         method: 'post',
-        url: 'https://api.petgram.club/api/login',
+        url: 'https://petgram-api-aram.herokuapp.com/api/login',
         data: {
           identity,
           password,

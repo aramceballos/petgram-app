@@ -28,7 +28,7 @@ const Post = ({ navigation, route, token, setToken }) => {
     setLoading(true);
     try {
       const res = await axios(
-        `https://api.petgram.club/api/p/individual/${postId}`,
+        `https://petgram-api-aram.herokuapp.com/api/post/${postId}`,
         {
           headers: {
             Authorization: `Bearer ${token}`,
