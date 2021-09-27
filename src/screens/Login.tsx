@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { ActivityIndicator } from 'react-native';
 import styled from 'styled-components/native';
-// import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
 import { connect } from 'react-redux';
 
@@ -57,10 +56,27 @@ const StyledLink = styled.Text`
   font-weight: 600;
 `;
 
+const ErrorMessageContainer = styled.View`
+  width: 100%;
+  align-items: center;
+`;
+
+const ErrorMessageWrapper = styled.View`
+  background-color: #fdecea;
+  width: 90%;
+  border-radius: 3px;
+  justify-content: center;
+  align-items: center;
+  height: 45px;
+`;
+
+const ErrorMessage = styled.Text``;
+
 const Login = ({ setToken, setUserInfo }) => {
   const [loading, setLoading] = useState(false);
   const [identity, setIdentity] = useState('');
   const [password, setPassword] = useState('');
+  const [errorMessage, setErrorMessage] = useState('');
 
   const handleSubmit = async () => {
     setLoading(true);
@@ -81,9 +97,12 @@ const Login = ({ setToken, setUserInfo }) => {
           username: response.data.data.username,
         });
         setToken(response.data.data.token);
+      } else {
+        setErrorMessage('Incorrect username or password');
       }
       setLoading(false);
     } catch (error) {
+      setErrorMessage('Error on login');
       setLoading(false);
     }
   };
@@ -119,6 +138,13 @@ const Login = ({ setToken, setUserInfo }) => {
           Don't have an account yet? <StyledLink>Sign up</StyledLink>
         </Text>
       </FormContainer>
+      {errorMessage !== '' && (
+        <ErrorMessageContainer>
+          <ErrorMessageWrapper>
+            <ErrorMessage>{errorMessage}</ErrorMessage>
+          </ErrorMessageWrapper>
+        </ErrorMessageContainer>
+      )}
     </Container>
   );
 };
