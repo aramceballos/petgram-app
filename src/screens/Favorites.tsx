@@ -1,10 +1,15 @@
 import React, { useState, useEffect } from 'react';
-import { Dimensions } from 'react-native';
+import { Dimensions, RefreshControl, ScrollView } from 'react-native';
 import { connect } from 'react-redux';
 import styled from 'styled-components/native';
 import axios from 'axios';
 
 import { setToken as setTokenAction } from '../actions';
+
+const Container = styled.View`
+  background-color: white;
+  height: 100%;
+`;
 
 const PostsContainer = styled.View`
   width: ${Dimensions.get('window').width}px;
@@ -24,6 +29,7 @@ const PostImage = styled.Image`
 
 const Favorites = ({ navigation, token, setToken }) => {
   const [posts, setPosts] = useState<IPost[]>([]);
+  const [refreshing, setRefreshing] = useState(false);
 
   useEffect(() => {
     getPosts();
@@ -56,16 +62,31 @@ const Favorites = ({ navigation, token, setToken }) => {
     navigation.navigate('Post', { postId });
   };
 
+  const handleRefresh = () => {
+    setRefreshing(true);
+    getPosts().finally(() => setRefreshing(false));
+  };
+
   return (
-    <PostsContainer scrollView>
-      {posts &&
-        posts.length > 0 &&
-        posts.map((post) => (
-          <PostImageWrapper key={post.id} onPress={() => handlePress(post.id)}>
-            <PostImage source={{ uri: post.image_url }} />
-          </PostImageWrapper>
-        ))}
-    </PostsContainer>
+    <Container>
+      <ScrollView
+        showsVerticalScrollIndicator={false}
+        refreshControl={
+          <RefreshControl refreshing={refreshing} onRefresh={handleRefresh} />
+        }>
+        <PostsContainer>
+          {posts &&
+            posts.length > 0 &&
+            posts.map((post) => (
+              <PostImageWrapper
+                key={post.id}
+                onPress={() => handlePress(post.id)}>
+                <PostImage source={{ uri: post.image_url }} />
+              </PostImageWrapper>
+            ))}
+        </PostsContainer>
+      </ScrollView>
+    </Container>
   );
 };
 
