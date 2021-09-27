@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { RefreshControl } from 'react-native';
 import axios from 'axios';
 import styled from 'styled-components/native';
 import { connect } from 'react-redux';
@@ -16,6 +17,7 @@ const Home = ({ navigation, token, setToken }) => {
   const [categories, setCategories] = useState<ICategory[]>();
   const [loadingPosts, setLoadingPosts] = useState(false);
   const [posts, setPosts] = useState<IPost[]>();
+  const [refreshing, setRefreshing] = useState(false);
 
   useEffect(() => {
     getCategories();
@@ -75,8 +77,19 @@ const Home = ({ navigation, token, setToken }) => {
     navigation.navigate('User', { username });
   };
 
+  const handleRefresh = async () => {
+    setRefreshing(true);
+    await Promise.all([getCategories(), getPosts()]).finally(() => {
+      setRefreshing(false);
+    });
+  };
+
   return (
-    <Container showsVerticalScrollIndicator={false}>
+    <Container
+      showsVerticalScrollIndicator={false}
+      refreshControl={
+        <RefreshControl refreshing={refreshing} onRefresh={handleRefresh} />
+      }>
       <ListOfCategories
         loading={loadingCategories}
         categories={categories as ICategory[]}
