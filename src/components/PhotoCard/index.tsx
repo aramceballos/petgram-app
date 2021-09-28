@@ -294,7 +294,10 @@ const PhotoCard = ({
         )}
 
         <Description>
-          <UserLink>{username}</UserLink> {description}
+          <Pressable onPress={handlePressName} style={{ height: 14 }}>
+            <UserLink>{username}</UserLink>
+          </Pressable>{' '}
+          {description}
         </Description>
         <PostDateText>{parseDate(post_date)}</PostDateText>
       </BottomSection>
