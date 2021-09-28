@@ -1,5 +1,6 @@
+/* eslint-disable react-native/no-inline-styles */
 import React, { useEffect } from 'react';
-import { StatusBar, Image } from 'react-native';
+import { StatusBar, Image, View } from 'react-native';
 import SplashScreen from 'react-native-splash-screen';
 import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
@@ -59,11 +60,25 @@ const App = ({ token }) => {
               name="User"
               component={UserStack}
               options={{
-                tabBarIcon: ({ size }) => (
-                  <Image
-                    style={{ width: size, height: size }}
-                    source={profile}
-                  />
+                tabBarIcon: ({ size, focused }) => (
+                  <View
+                    style={
+                      focused
+                        ? {
+                            borderWidth: 2,
+                            borderRadius: 50,
+                          }
+                        : {}
+                    }>
+                    <Image
+                      style={{
+                        width: size,
+                        height: size,
+                        borderRadius: size / 2,
+                      }}
+                      source={profile}
+                    />
+                  </View>
                 ),
               }}
             />
