@@ -1,3 +1,4 @@
+/* eslint-disable react-native/no-inline-styles */
 import React, { useEffect, useState } from 'react';
 import { Dimensions, Text, Pressable, Animated } from 'react-native';
 import Image from 'react-native-scalable-image';
@@ -288,7 +289,13 @@ const PhotoCard = ({
         {randomUserInfo && (
           <LikedBy>
             <Text>Liked by </Text>
-            <UserLink>{randomUserInfo?.username}</UserLink>
+            <Pressable
+              onPress={() =>
+                onPressName && onPressName(randomUserInfo?.username)
+              }
+              style={{ height: 14 }}>
+              <UserLink>{randomUserInfo?.username}</UserLink>
+            </Pressable>
             {likes && likes.length > 1 && <Text>and others</Text>}
           </LikedBy>
         )}
