@@ -1,6 +1,6 @@
 # Change Log
 
-## 0.6.0 (September 28, 2021)
+## 1.0.0 (September 28, 2021)
 
 - Add Signup screen
 - Add navigation on click on random username
