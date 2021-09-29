@@ -14,7 +14,7 @@ import home_icon_filled from './assets/home_filled.png';
 import heart from './assets/heart.png';
 import heart_filled from './assets/heart_filled.png';
 import profile from './assets/profile_placeholder.jpeg';
-import Login from './screens/Login';
+import Auth from './screens/Auth';
 
 const Tabs = createBottomTabNavigator();
 
@@ -84,7 +84,7 @@ const App = ({ token }) => {
             />
           </Tabs.Navigator>
         ) : (
-          <Login />
+          <Auth />
         )}
       </NavigationContainer>
     </>
